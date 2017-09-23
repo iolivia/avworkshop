@@ -8,12 +8,25 @@
     {% include "player_app/header.html" with app_name=app_name only %}
 
     <div>
-        <!-- Video details -->
-        <h2> {{ title }} </h2>
+        <div class="row justify-content-md-center">
 
-        <!-- Video player -->
-        <video data-dashjs-player autoplay src="http://amssamples.streaming.mediaservices.windows.net/683f7e47-bd83-4427-b0a3-26a6c4547782/BigBuckBunny.ism/manifest(format=mpd-time-csf)" controls></video> 
-        
+            <!-- Video details -->
+            <div class="col col-lg-3">
+                <h2> {{ title }} </h2>
+            </div>
+
+            <!-- Video player -->
+            <div class="col col-lg-7">
+                <video 
+                    data-dashjs-player 
+                    autoplay 
+                    controls
+                    width="100%"
+                    src="http://amssamples.streaming.mediaservices.windows.net/683f7e47-bd83-4427-b0a3-26a6c4547782/BigBuckBunny.ism/manifest(format=mpd-time-csf)">
+                </video> 
+            </div>
+
+        </div>
     </div>
 
     <!-- Footer -->
