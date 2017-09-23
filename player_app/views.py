@@ -9,6 +9,10 @@ from player_app import imdb_api
 import logging
 logger = logging.getLogger(__name__)
 
+# app constants 
+APP_NAME = "My video streaming app"
+FOOTER_TEXT = "AV Workshop @ 2017"
+
 def index(request):
 
     template = loader.get_template("player_app/index.html")
@@ -20,7 +24,7 @@ def index(request):
     popular_shows = imdb_api.get_popular_shows()[:movies_count]
 
     context = {
-        'app_title': "My video streaming app",
+        'app_name': APP_NAME,
         'sections':
         [
             {
@@ -36,7 +40,7 @@ def index(request):
                 'movies': popular_shows
             }
         ],
-        'footer_text': "AV Workshop @ 2017"
+        'footer_text': FOOTER_TEXT
     }
 
     return HttpResponse(template.render(context, request))
@@ -44,8 +48,11 @@ def index(request):
 def player(request, title="No title"):
     
     template = loader.get_template("player_app/player.html")
+
     context = {
-        'title' : request.GET['title']
+        'app_name': APP_NAME,
+        'title' : request.GET['title'],
+        'footer_text': FOOTER_TEXT
     }
 
     return HttpResponse(template.render(context, request))
