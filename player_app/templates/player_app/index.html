@@ -1,0 +1,15 @@
+{% include "player_app/page_includes.html" %}
+
+<div class="container-fluid">
+
+    {% include "player_app/header.html" with app_title=app_title only %}
+
+    {% for section in sections %}
+
+        {% include "player_app/movies_section.html" with movies=section.movies title=section.title only %}
+
+    {% endfor %}
+
+    {% include "player_app/footer.html" with footer_text=footer_text only %}
+
+</div>

@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 
 def index(request):
 
-    template = loader.get_template("player_app/home.html")
+    template = loader.get_template("player_app/index.html")
 
     movies_count = 15
 
     top_250 = imdb_api.get_top_250_movies()[:movies_count]
     popular_movies = imdb_api.get_popular_movies()[:movies_count]
     popular_shows = imdb_api.get_popular_shows()[:movies_count]
-    
+
     context = {
         'app_title': "My video streaming app",
         'sections':
@@ -35,7 +35,8 @@ def index(request):
                 'title': "Popular shows",
                 'movies': popular_shows
             }
-        ]
+        ],
+        'footer_text': "AV Workshop @ 2017"
     }
 
     return HttpResponse(template.render(context, request))
