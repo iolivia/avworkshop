@@ -55,7 +55,7 @@ def player(request, id="Unknow id"):
 
     # load the whole movie 
     movie_id = request.GET['id']
-    movie = imdb_api.get_movie_by_id(movie_id)
+    movie = imdb_api.get_movie_details_by_id(movie_id)
     
     context = {
         'app_name': APP_NAME,

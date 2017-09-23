@@ -1,38 +1,55 @@
+# imports
 import json
 import pdb
+import logging
 from imdbpie import Imdb
 
+# models
 from .models import Movie, MovieDetails
 
-import logging
+# setup logger
+# usage: logger.info("hello info!")
 logger = logging.getLogger(__name__)
 
+# movies count for placeholder movies
 MOVIES_COUNT = 30
 
+# initialize imdb instance 
+imdb = Imdb(anonymize=True)
+
+
+# gets top 250 movies from imdb
+# example model is in docs/movie.json
+# should return models.Movie
 def get_top_250_movies():
 
-    imdb = Imdb(anonymize=True)
     movies = imdb.top_250()
 
     return list(map(lambda m: _parse_movie(m), movies))
 
+# gets popular movies from imdb
+# example model is in docs/movie.json
+# should return models.Movie
 def get_popular_movies():
 
-    imdb = Imdb(anonymize=True)
     movies = imdb.popular_movies()
 
     return list(map(lambda m: _parse_movie(m), movies))
 
+# gets popular shows from imdb
+# example model is in docs/movie.json
+# should return models.Movie
 def get_popular_shows():
 
-    imdb = Imdb(anonymize=True)
     movies = imdb.popular_shows()
 
     return list(map(lambda m: _parse_movie(m), movies))
 
-def get_movie_by_id(id):
+# gets one movie from imdb
+# example model is in docs/movie-details.json
+# should return models.MovieDetails
+def get_movie_details_by_id(id):
 
-    imdb = Imdb(anonymize=True)
     imdb_movie = imdb.get_title_by_id(id)
 
     movie_details = _parse_title(imdb_movie)
@@ -79,6 +96,8 @@ def _try_get_attribute(obj, attribute):
 
     return ""
 
+# creates a number of placeholder movies using test data. 
+# returns a list of models.Movie
 def _get_placeholder_movies(count):
 
     movies = []
@@ -97,3 +116,21 @@ def _get_placeholder_movies(count):
         movies.append(movie)
     
     return movies
+
+# creates a placeholder movie detail object
+# returns models.MovieDetails
+def _get_placeholder_movie_details():
+    
+    image_url = "http://via.placeholder.com/125x175"
+    trailer_url = "https://github.com/bower-media-samples/big-buck-bunny-1080p-30s/blob/master/video.mp4?raw=true"
+
+    movie_details_model = MovieDetails.create(
+        "id", 
+        "Movie title", 
+        "2017",
+        "Some plot",
+        8.2,
+        image_url,
+        trailer_url)
+
+    return movie_details_model
