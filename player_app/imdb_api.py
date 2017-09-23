@@ -32,18 +32,14 @@ def get_top_250_movies():
 # should return models.Movie
 def get_popular_movies():
 
-    movies = imdb.popular_movies()
-
-    return list(map(lambda m: _parse_movie(m), movies))
+    return _get_placeholder_movies(MOVIES_COUNT)
 
 # gets popular shows from imdb
 # example model is in docs/movie.json
 # should return models.Movie
 def get_popular_shows():
 
-    movies = imdb.popular_shows()
-
-    return list(map(lambda m: _parse_movie(m), movies))
+    return _get_placeholder_movies(MOVIES_COUNT)
 
 # gets one movie from imdb
 # example model is in docs/movie-details.json
