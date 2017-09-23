@@ -1,10 +1,12 @@
 <div class="card-section">
 
-    <h2> {{ title }} </h2>
-
-    <div class="card-list">
+    <div class="card-list scrollbar-style">
 
         <ul class="list-inline">
+
+            <div class="heading-card-item">
+                <h3>{{ title }}</h3>
+            </div>
 
             {% for movie in movies %}
 

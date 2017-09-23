@@ -4,14 +4,14 @@ from django.template import loader
 
 from .models import Movie
 
-from home import imdb_api
+from player_app import imdb_api
 
 import logging
 logger = logging.getLogger(__name__)
 
 def index(request):
 
-    template = loader.get_template("home/home.html")
+    template = loader.get_template("player_app/home.html")
 
     movies_count = 15
 
@@ -20,6 +20,7 @@ def index(request):
     popular_shows = imdb_api.get_popular_shows()[:movies_count]
     
     context = {
+        'app_title': "My video streaming app",
         'sections':
         [
             {
@@ -41,7 +42,7 @@ def index(request):
 
 def player(request, title="No title"):
     
-    template = loader.get_template("home/player.html")
+    template = loader.get_template("player_app/player.html")
     context = {
         'title' : request.GET['title']
     }

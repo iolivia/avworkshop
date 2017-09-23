@@ -13,16 +13,25 @@
 
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'player_app/style.css' %}" />
 
-<div>
+<div class="container-fluid">
 
-    <h1>My video streaming app</h1> 
+    <header class="page-header">
+        <p>
+            <h1>{{ app_title }}</h1> 
+        </p>
+    </header>
 
     {% for section in sections %}
 
-        {% include "home/movies_section.html" with movies=section.movies title=section.title only %}
+        {% include "player_app/movies_section.html" with movies=section.movies title=section.title only %}
 
     {% endfor %}
 
+    <footer class="footer">
+        <p>
+            <h5>AV Workshop @ 2017</h5>
+        </p>
+    </footer>
 </div>
