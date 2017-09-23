@@ -7,5 +7,5 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^player/$', views.player, name='player'),
-    url(r'^player/(?P<title>\w{0,50})/$', views.player, name='player'),
+    url(r'^player/(?P<id>[\w{}.-]{1,40})/$', views.player, name='player'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

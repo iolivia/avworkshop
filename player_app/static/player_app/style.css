@@ -103,3 +103,16 @@ body
     -ms-transition: opacity 0.15s ease-in;
     transition: opacity 0.15s ease-in;
 }
+
+/* Player page */
+.player-img 
+{
+    margin-top: 25px;
+    width:200px;
+    height:auto; 
+}
+
+.player 
+{
+    margin-top: 10px;
+}

@@ -7,6 +7,11 @@ from .models import Movie
 from player_app import imdb_api
 
 import logging
+
+logging.basicConfig(
+    level = logging.INFO
+)
+
 logger = logging.getLogger(__name__)
 
 # app constants 
@@ -44,13 +49,17 @@ def index(request):
 
     return HttpResponse(template.render(context, request))
 
-def player(request, title="No title"):
+def player(request, id="Unknow id"):
     
     template = loader.get_template("player_app/player.html")
 
+    # load the whole movie 
+    movie_id = request.GET['id']
+    movie = imdb_api.get_movie_by_id(movie_id)
+    
     context = {
         'app_name': APP_NAME,
-        'title' : request.GET['title'],
+        'movie' : movie,
         'footer_text': FOOTER_TEXT
     }
 
