@@ -1,0 +1,28 @@
+<div class="card-section">
+
+    <h2> {{ title }} </h2>
+
+    <div class="card-list">
+
+        <ul class="list-inline">
+
+            {% for movie in movies %}
+
+            <li class="card-item">
+                <a href="{% url 'player' %}?title={{movie.title}}">
+                    <div class="card card-inverse">
+                        <img class="card-img" src="{{ movie.image_url }}" alt="{{ movie.title }}">
+                        <div class="card-img-overlay">
+                            <!-- <h4 class="card-title"> {{ movie.title }} </h4> -->
+                        </div>
+                    </div>
+                </a>
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+</div>
