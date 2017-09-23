@@ -72,6 +72,7 @@ Use movie.trailer_url for the video source
 duration: 5 mins
 
 Use the manifest instead of the video 
+Use data-dashjs-player attribute on the video element
 
 http://amssamples.streaming.mediaservices.windows.net/683f7e47-bd83-4427-b0a3-26a6c4547782/BigBuckBunny.ism/manifest(format=mpd-time-csf)
 
