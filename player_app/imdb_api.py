@@ -3,6 +3,8 @@ from imdbpie import Imdb
 
 from .models import Movie
 
+MOVIES_COUNT = 30
+
 def get_top_250_movies():
 
     imdb = Imdb(anonymize=True)
@@ -45,3 +47,20 @@ def _try_get_attribute(obj, attribute):
         return obj[attribute]
 
     return ""
+
+def _get_placeholder_movies(count):
+
+    movies = []
+
+    for i in range(1, count+1):
+        movie_title = "Movie " + str(i)
+        movie_image_url = "http://via.placeholder.com/125x175"
+
+        movie = Movie.create(
+            movie_title,
+            movie_image_url
+        )
+
+        movies.append(movie)
+    
+    return movies

@@ -12,16 +12,15 @@ logger = logging.getLogger(__name__)
 # app constants 
 APP_NAME = "My video streaming app"
 FOOTER_TEXT = "AV Workshop @ 2017"
+MOVIES_PER_ROW = 20
 
 def index(request):
 
     template = loader.get_template("player_app/index.html")
 
-    movies_count = 15
-
-    top_250 = imdb_api.get_top_250_movies()[:movies_count]
-    popular_movies = imdb_api.get_popular_movies()[:movies_count]
-    popular_shows = imdb_api.get_popular_shows()[:movies_count]
+    top_250 = imdb_api.get_top_250_movies()[:MOVIES_PER_ROW]
+    popular_movies = imdb_api.get_popular_movies()[:MOVIES_PER_ROW]
+    popular_shows = imdb_api.get_popular_shows()[:MOVIES_PER_ROW]
 
     context = {
         'app_name': APP_NAME,
@@ -56,12 +55,3 @@ def player(request, title="No title"):
     }
 
     return HttpResponse(template.render(context, request))
-
-def _get_movies(count):
-    movies = []
-
-    for i in range(1, count+1):
-        movie = Movie.create("Movie " + str(i))
-        movies.append(movie)
-    
-    return movies
