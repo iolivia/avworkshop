@@ -7,7 +7,7 @@ $ source my_virtual_env/bin/activate
 
 ## Install python packages
 $ cd avworkshow
-$ pip install -r 
+$ pip install -r requirements.txt
 
 # Running the server
 $ python manage.py runserver
