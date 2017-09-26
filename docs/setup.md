@@ -1,19 +1,19 @@
-# Create a python virtual environment 
-pip3 install virtualenv 
-virtualenv my_virtual_env
+# Pre-requisites
+## Create a python virtual environment 
+$ python3 -m venv my_virtual_env
 
-# Activate the virtual env
-my_virtual_env\Scripts\activate
+## Activate the virtual env
+$ source my_virtual_env/bin/activate
 
-# Deactivate the virtual env
-deactivate
+## Install python packages
+$ cd avworkshow
+$ pip install -r 
 
-# Install python packages 
-pip install Django==1.11.5
-pip install django-bootstrap3
-pip install imdbpie
-pip install simplejson
-pip install pdb
+# Running the server
+$ python manage.py runserver
 
-# Run the server
-python manage.py runserver
+# Wrapping
+1. Press Ctrl+C to stop the server
+
+2. Deactivate the env by running
+$ deactivate
