@@ -23,17 +23,24 @@ def index(request):
 
     template = loader.get_template("player_app/index.html")
 
-    top_250 = imdb_api.get_top_250_movies()[:MOVIES_PER_ROW]
+    popular_titles = imdb_api.get_popular_titles()[:MOVIES_PER_ROW]
     popular_movies = imdb_api.get_popular_movies()[:MOVIES_PER_ROW]
     popular_shows = imdb_api.get_popular_shows()[:MOVIES_PER_ROW]
+
+    logger.info("Got {} popular_titles".format(len(popular_titles)))
+    logger.info("Got {} popular_movies".format(len(popular_movies)))
+    logger.info("Got {} popular_shows".format(len(popular_shows)))
+
+    logger.info(popular_titles)
+    logger.info(popular_titles[0])
 
     context = {
         'app_name': APP_NAME,
         'sections':
         [
             {
-                'title': "Top 250 movies",
-                'movies': top_250
+                'title': "Popular titles",
+                'movies': popular_titles
             },
             {
                 'title': "Popular movies",

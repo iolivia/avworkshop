@@ -15,42 +15,34 @@ logger = logging.getLogger(__name__)
 MOVIES_COUNT = 30
 
 # initialize imdb instance 
-imdb = Imdb(anonymize=True)
+imdb = Imdb()
 
-
-# gets top 250 movies from imdb
+# gets popular titles from imdb
 # example model is in docs/movie.json
 # should return models.Movie
-def get_top_250_movies():
-
-    movies = imdb.top_250()
-
-    return list(map(lambda m: _parse_movie(m), movies))
+def get_popular_titles():
+    return _unpack_and_parse(imdb.get_popular_titles())
 
 # gets popular movies from imdb
 # example model is in docs/movie.json
 # should return models.Movie
 def get_popular_movies():
-
-    movies = imdb.popular_movies()
-
-    return list(map(lambda m: _parse_movie(m), movies))
+    return _unpack_and_parse(imdb.get_popular_movies())
 
 # gets popular shows from imdb
 # example model is in docs/movie.json
 # should return models.Movie
 def get_popular_shows():
-
-    movies = imdb.popular_shows()
-
-    return list(map(lambda m: _parse_movie(m), movies))
+    return _unpack_and_parse(imdb.get_popular_shows())
 
 # gets one movie from imdb
 # example model is in docs/movie-details.json
 # should return models.MovieDetails
 def get_movie_details_by_id(id):
 
-    imdb_movie = imdb.get_title_by_id(id)
+    logger.info("Id {}".format(id))
+
+    imdb_movie = imdb.get_title(id)
 
     movie_details = _parse_title(imdb_movie)
 
@@ -72,12 +64,19 @@ def _parse_title(title):
 
     return movie_details_model
 
+def _unpack_and_parse(movies):
+    unpacked_movies = _unpack_movies(movies)
+
+    return list(map(lambda m: _parse_movie(m), unpacked_movies))
+
+def _unpack_movies(movies):
+    return movies['ranks']
+
 def _parse_movie(movie):
 
-    if 'object' in movie:
-        movie = movie['object']
+    logger.info("movie json: {}".format(json.dumps(movie)))
 
-    movie_id            = _try_get_attribute(movie, 'tconst')
+    movie_id            = _try_get_attribute(movie, 'id')
     movie_title         = _try_get_attribute(movie, 'title')
     movie_image         = _try_get_attribute(movie, 'image')
     movie_image_url     = _try_get_attribute(movie_image, 'url')
@@ -87,11 +86,13 @@ def _parse_movie(movie):
         movie_title, 
         movie_image_url)
 
+    logger.info("movie movie_model: {}".format(movie_model))
+
     return movie_model
 
 def _try_get_attribute(obj, attribute):
 
-    if attribute in obj:
+    if type(obj) is dict and len(obj.keys()) > 0 and attribute in obj:
         return obj[attribute]
 
     return ""
