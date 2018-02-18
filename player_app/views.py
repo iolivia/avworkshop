@@ -31,9 +31,6 @@ def index(request):
     logger.info("Got {} popular_movies".format(len(popular_movies)))
     logger.info("Got {} popular_shows".format(len(popular_shows)))
 
-    logger.info(popular_titles)
-    logger.info(popular_titles[0])
-
     context = {
         'app_name': APP_NAME,
         'sections':

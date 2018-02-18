@@ -4,4 +4,9 @@
     {'rank': 73, 'until': '2018-02-12T00: 00: 00Z'
     }
   ], 
-  'id': '/title/tt5013056/', 'image': {'height': 4096, 'id': '/title/tt5013056/images/rm3222677504', 'url': 'https: //images-na.ssl-images-amazon.com/images/M/MV5BN2YyZjQ0NTEtNzU5MS00NGZkLTg0MTEtYzJmMWY3MWRhZjM2XkEyXkFqcGdeQXVyMDA4NzMyOA@@._V1_.jpg', 'width': 2764}, 'title': 'Dunkirk', 'titleType': 'movie', 'year': 2017}
+  'id': '/title/tt5013056/', 
+  'image': {'height': 4096, 'id': '/title/tt5013056/images/rm3222677504', 
+    'url': 'https: //images-na.ssl-images-amazon.com/images/M/MV5BN2YyZjQ0NTEtNzU5MS00NGZkLTg0MTEtYzJmMWY3MWRhZjM2XkEyXkFqcGdeQXVyMDA4NzMyOA@@._V1_.jpg', 'width': 2764}, 
+    'title': 'Dunkirk', 
+    'titleType': 'movie', 
+    'year': 2017}
