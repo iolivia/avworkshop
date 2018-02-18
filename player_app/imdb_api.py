@@ -17,26 +17,33 @@ MOVIES_COUNT = 30
 # initialize imdb instance 
 imdb = Imdb(anonymize=True)
 
+
 # gets top 250 movies from imdb
 # example model is in docs/movie.json
 # should return models.Movie
 def get_top_250_movies():
 
-    return _get_placeholder_movies(MOVIES_COUNT)
+    movies = imdb.top_250()
+
+    return list(map(lambda m: _parse_movie(m), movies))
 
 # gets popular movies from imdb
 # example model is in docs/movie.json
 # should return models.Movie
 def get_popular_movies():
 
-    return _get_placeholder_movies(MOVIES_COUNT)
+    movies = imdb.popular_movies()
+
+    return list(map(lambda m: _parse_movie(m), movies))
 
 # gets popular shows from imdb
 # example model is in docs/movie.json
 # should return models.Movie
 def get_popular_shows():
 
-    return _get_placeholder_movies(MOVIES_COUNT)
+    movies = imdb.popular_shows()
+
+    return list(map(lambda m: _parse_movie(m), movies))
 
 # gets one movie from imdb
 # example model is in docs/movie-details.json
@@ -64,6 +71,30 @@ def _parse_title(title):
         trailer_url)
 
     return movie_details_model
+
+def _parse_movie(movie):
+
+    if 'object' in movie:
+        movie = movie['object']
+
+    movie_id            = _try_get_attribute(movie, 'tconst')
+    movie_title         = _try_get_attribute(movie, 'title')
+    movie_image         = _try_get_attribute(movie, 'image')
+    movie_image_url     = _try_get_attribute(movie_image, 'url')
+
+    movie_model = Movie.create(
+        movie_id, 
+        movie_title, 
+        movie_image_url)
+
+    return movie_model
+
+def _try_get_attribute(obj, attribute):
+
+    if attribute in obj:
+        return obj[attribute]
+
+    return ""
 
 # creates a number of placeholder movies using test data. 
 # returns a list of models.Movie
