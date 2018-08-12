@@ -3,6 +3,7 @@ import json
 import pdb
 import logging
 from imdbpie import Imdb
+from imdb import IMDb
 
 # models
 from .models import Movie
@@ -16,6 +17,7 @@ MOVIES_COUNT = 30
 
 # initialize imdb instance 
 imdb = Imdb()
+ia = IMDb()
 
 # gets popular titles from imdb
 # example model is in docs/movie.json
@@ -39,9 +41,8 @@ def get_popular_shows():
 # example model is in docs/movie-details.json
 # should return models.MovieDetails
 def get_movie_details_by_id(id):
-    movie_details = imdb.get_title(id)
-    movie_videos = imdb.get_title_videos(id)
-    return _parse_movie_details(movie_details, movie_videos)
+    movie_details = ia.get_movie(id[2:])
+    return _parse_movie_details(movie_details)
 
 # def _parse_title(title):
 
@@ -81,32 +82,20 @@ def _parse_movie(movie):
 
     return movie_model
 
-def _parse_movie_details(movie_details, movie_videos):
+def _parse_movie_details(movie):
 
-    logger.info(movie_details)
-    logger.info(movie_videos)
-    
     # base details attributes 
-    base = _try_get_attribute(movie_details, 'base')
-
-    movie_id            = _try_get_attribute(base, 'id').replace('/', '').replace('title', '')
-    movie_title         = _try_get_attribute(base, 'title')
-    movie_image         = _try_get_attribute(base, 'image')
-    movie_image_url     = _try_get_attribute(movie_image, 'url')
-    year                = _try_get_attribute(base, 'year')
+    movie_id            = movie.getID()
+    movie_title         = ""
+    movie_image         = ""
+    movie_image_url     = ""
+    year                = ""
     
     # other movie details attributes
-    plot                = _try_get_attribute(movie_details, 'plot')
-    plot_outline        = _try_get_attribute(plot, 'plot_outline')
-    plot_text           = _try_get_attribute(plot_outline, 'text')
+    plot_text           = ""
 
     # videos
-    videos              = _try_get_attribute(movie_videos, 'videos')
-    trailers            = list(filter(lambda video: video['contentType'] == 'Trailer', videos))
-    trailer             = trailers.pop(0)
-    encodings           = _try_get_attribute(trailer, 'encodings')
-    encoding            = encodings.pop(0)
-    trailer_url         = _try_get_attribute(encoding, 'play')
+    trailer_url         = ""
     
     movie_model = Movie.create(
         movie_id, 

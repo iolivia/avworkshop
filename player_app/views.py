@@ -7,6 +7,8 @@ from .models import Movie
 from player_app import imdb_api
 
 import logging
+import json
+from pprint import pprint
 
 logging.basicConfig(
     level = logging.INFO
@@ -26,6 +28,10 @@ def index(request):
     popular_titles = imdb_api.get_popular_titles()[:MOVIES_PER_ROW]
     popular_movies = imdb_api.get_popular_movies()[:MOVIES_PER_ROW]
     popular_shows = imdb_api.get_popular_shows()[:MOVIES_PER_ROW]
+
+    logger.info(popular_movies[0])
+    # logger.info(json.dumps(popular_movies[0]))
+    pprint(vars(popular_movies[0]))
 
     logger.info("Got {} popular_titles".format(len(popular_titles)))
     logger.info("Got {} popular_movies".format(len(popular_movies)))
@@ -53,7 +59,7 @@ def index(request):
 
     return HttpResponse(template.render(context, request))
 
-def player(request, id="Unknow id"):
+def player(request, id="Unknown id"):
     
     template = loader.get_template("player_app/player.html")
 
