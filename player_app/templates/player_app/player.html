@@ -10,30 +10,8 @@
     <div>
         <div class="row justify-content-md-center">
 
-            <!-- Video details -->
-            <div class="col col-lg-4">
-
-                <div class="row">
-                    <h2> {{ movie.title }} ({{ movie.year }})</h2>
-                </div>
-
-                <div class="row">
-
-                    <div class="col col-lg-2">
-                        <img class="player-img" src="{{movie.image_url}}"></img>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col col-lg-6 player">
-                <video 
-                    data-dashjs-player 
-                    controls
-                    width="100%"
-                    src="{{movie.trailer_url}}">
-                </video> 
+            <div class="row player">
+                <video controls width=100%></video>
             </div>
 
         </div>
@@ -43,3 +21,12 @@
     {% include "player_app/footer.html" with footer_text=footer_text only %}
 
 </div>
+
+<script type="text/javascript">
+    (function () {
+
+        // TODO: put your code here 
+
+    })();
+
+</script>
