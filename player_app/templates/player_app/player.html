@@ -27,6 +27,24 @@
 
         // TODO: put your code here 
 
+        function onFragmentDownloaded() {
+            console.log(this.response);
+        }
+
+        function downloadFragment(url, callback) {
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener("load", callback);
+            oReq.open("GET", url);
+            oReq.responseType = "arraybuffer";
+            oReq.send();
+        }
+
+        var urlBase = "http://www.bok.net/dash/tears_of_steel/cleartext/$RepresentationID$/seg-$Number$.m4f";
+        urlBase = urlBase.replace("$RepresentationID$", "video/1");
+        urlBase = urlBase.replace("$Number$", "1");
+        
+        downloadFragment(urlBase, onFragmentDownloaded);
+
     })();
 
 </script>
