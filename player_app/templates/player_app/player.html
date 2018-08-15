@@ -29,9 +29,14 @@
         var urlBase = "http://www.bok.net/dash/tears_of_steel/cleartext/$RepresentationID$/seg-$Number$.m4f";
         
         var mediaSource = null;
+        var audioSourceBuffer = null;
         var videoSourceBuffer = null;
 
+        var currentAudioFragmentIndex = 1;
         var currentVideoFragmentIndex = 1;
+
+        var maxAudioFragmentIndex = 245;
+        var maxVideoFragmentIndex = 245;
 
         function onFragmentDownloaded() {
             console.log(this.response);
@@ -60,13 +65,44 @@
             }
         }
 
-        function onVideoInitialized() {
-            // Start downloading and feeding fragments 
-
+        function buildInitFragmentUrl(representationId) {
             var initUrl = urlBase;
-            initUrl = initUrl.replace("$RepresentationID$", "video/1");
+            initUrl = initUrl.replace("$RepresentationID$", representationId);
             initUrl = initUrl.replace("seg-$Number$.m4f", "init.mp4");
-            downloadFragment(initUrl, appendVideoFragment);
+
+            return initUrl;
+        }
+
+        function buildFragmentUrl(representationId, currentVideoFragmentIndex) {
+            var fragmentUrl = urlBase;
+            fragmentUrl = fragmentUrl.replace("$RepresentationID$", representationId);
+            fragmentUrl = fragmentUrl.replace("$Number$", currentVideoFragmentIndex);
+
+            return fragmentUrl;
+        }
+
+        function onVideoInitialized() {
+            // Append the init fragment
+            downloadFragment(buildInitFragmentUrl("video/1"), appendVideoFragment);
+        }
+
+        function onAudioInitialized() {
+            // Append the init fragment
+            downloadFragment(buildInitFragmentUrl("audio/en"), appendAudioFragment);
+        }
+
+        function createSourceBuffer(mediaSource, type, codec, onNextFragmentHandler, onInitializedHandler) {
+            // Add source buffer
+            sourceBuffer = mediaSource.addSourceBuffer(codec);
+            console.log("Source buffer added - " + type);
+            // Receive update end events so we know when to queue the next fragment
+            sourceBuffer.addEventListener('updateend', onNextFragmentHandler);
+
+            // Initialize
+            onInitializedHandler();
+
+            // Give back to the caller
+            return sourceBuffer;
         }
 
         function onMediaSourceOpen() {
@@ -76,32 +112,53 @@
 
             // Add video source buffer
             var videoCodec = 'video/mp4; codecs="avc1.42C015"';
-            videoSourceBuffer = mediaSource.addSourceBuffer(videoCodec);
-            console.log("Video source buffer added");
-            // Receive update end events so we know when to queue the next fragment
-            videoSourceBuffer.addEventListener('updateend', onNextVideoFragment);
+            videoSourceBuffer = createSourceBuffer(mediaSource, "video", videoCodec, onNextVideoFragment, onVideoInitialized);
 
-            onVideoInitialized();
+            // Add audio source buffer
+            var audioCodec = 'audio/mp4; codecs="mp4a.40.2"';
+            audioSourceBuffer = createSourceBuffer(mediaSource, "audio", audioCodec, onNextAudioFragment, onAudioInitialized);
         }
 
-        function appendVideoFragment(fragmentBuffer) {
-            console.log(fragmentBuffer);
-
+        function appendFragment(type, sourceBuffer, fragmentBuffer) {
+            // console.log(fragmentBuffer);
             if (fragmentBuffer) {
-                console.log("Appending video fragment");
-                videoSourceBuffer.appendBuffer(fragmentBuffer);
+                console.log("Appending " + type + " fragment");
+                sourceBuffer.appendBuffer(fragmentBuffer);
             }
         }
 
-        function onNextVideoFragment() {
-            var fragmentUrl = urlBase;
-            fragmentUrl = fragmentUrl.replace("$RepresentationID$", "video/1");
-            fragmentUrl = fragmentUrl.replace("$Number$", currentVideoFragmentIndex);
+        function appendVideoFragment(fragmentBuffer) {
+            appendFragment("video", videoSourceBuffer, fragmentBuffer);
+        }
 
-            console.log("Downloading video fragment " + currentVideoFragmentIndex);
+        function appendAudioFragment(fragmentBuffer) {
+            appendFragment("audio", audioSourceBuffer, fragmentBuffer);
+        }
+
+        function downloadAndEnqueueNextFragment(type, representationId, currentIndex, appendHandler) {
+            var fragmentUrl = buildFragmentUrl(representationId, currentIndex);
+
+            console.log("Downloading " + type + " fragment " + currentIndex);
+
+            downloadFragment(fragmentUrl, appendHandler);
+        }
+
+        function onNextVideoFragment() {
+            if (maxAudioFragmentIndex === currentVideoFragmentIndex) {
+                console.warn("Downloaded all video fragments");
+                return;
+            }
+            downloadAndEnqueueNextFragment("video", "video/1", currentVideoFragmentIndex, appendVideoFragment);
             currentVideoFragmentIndex++;
-            
-            downloadFragment(fragmentUrl, appendVideoFragment);
+        }
+
+        function onNextAudioFragment() {
+            if (maxAudioFragmentIndex === currentAudioFragmentIndex) {
+                console.warn("Downloaded all audio fragments");
+                return;
+            }
+            downloadAndEnqueueNextFragment("audio", "audio/en", currentAudioFragmentIndex, appendAudioFragment);
+            currentAudioFragmentIndex++;
         }
 
         var videoElement = document.querySelector('video');
