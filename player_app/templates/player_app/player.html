@@ -26,6 +26,10 @@
     (function () {
 
         // TODO: put your code here 
+        var urlBase = "http://www.bok.net/dash/tears_of_steel/cleartext/$RepresentationID$/seg-$Number$.m4f";
+        
+        var mediaSource = null;
+        var videoSourceBuffer = null;
 
         function onFragmentDownloaded() {
             console.log(this.response);
@@ -33,7 +37,9 @@
 
         function downloadFragment(url, callback) {
             var oReq = new XMLHttpRequest();
-            oReq.addEventListener("load", callback);
+            oReq.addEventListener("load", function() {
+                callback(this.response);
+            });
             oReq.open("GET", url);
             oReq.responseType = "arraybuffer";
             oReq.send();
@@ -42,7 +48,7 @@
         function setupMediaSource(videoElement, onMediaSourceOpen) {
             if ('MediaSource' in window) {
                 // Create the media source
-                var mediaSource = new MediaSource();
+                mediaSource = new MediaSource();
                 videoElement.src = URL.createObjectURL(mediaSource);
 
                 // Setup open event handler
@@ -52,15 +58,42 @@
             }
         }
 
-        function onMediaSourceOpen() {
-            console.log("MediaSource is open");
+        function onVideoInitialized() {
+            // Start downloading and feeding fragments 
+
+            var initUrl = urlBase;
+            initUrl = initUrl.replace("$RepresentationID$", "video/1");
+            initUrl = initUrl.replace("seg-$Number$.m4f", "init.mp4");
+            downloadFragment(initUrl, appendVideoFragment);
         }
 
-        var urlBase = "http://www.bok.net/dash/tears_of_steel/cleartext/$RepresentationID$/seg-$Number$.m4f";
-        urlBase = urlBase.replace("$RepresentationID$", "video/1");
-        urlBase = urlBase.replace("$Number$", "1");
+        function onMediaSourceOpen() {
+            console.log("MediaSource is open");
 
-        downloadFragment(urlBase, onFragmentDownloaded);
+            mediaSource = this;
+
+            // Add video source buffer
+            var videoCodec = 'video/mp4; codecs="avc1.42C015"';
+            videoSourceBuffer = mediaSource.addSourceBuffer(videoCodec);
+            console.log("Video source buffer added");
+
+            onVideoInitialized();
+        }
+
+        function appendVideoFragment(fragmentBuffer) {
+            console.log(fragmentBuffer);
+
+            if (fragmentBuffer) {
+                console.log("Appending video fragment");
+                videoSourceBuffer.appendBuffer(fragmentBuffer);
+            }
+        }
+
+        // var urlBase = "http://www.bok.net/dash/tears_of_steel/cleartext/$RepresentationID$/seg-$Number$.m4f";
+        // urlBase = urlBase.replace("$RepresentationID$", "video/1");
+        // urlBase = urlBase.replace("$Number$", "1");
+
+        // downloadFragment(urlBase, onFragmentDownloaded);
 
         var videoElement = document.querySelector('video');
         setupMediaSource(videoElement, onMediaSourceOpen);
