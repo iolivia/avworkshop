@@ -39,11 +39,31 @@
             oReq.send();
         }
 
+        function setupMediaSource(videoElement, onMediaSourceOpen) {
+            if ('MediaSource' in window) {
+                // Create the media source
+                var mediaSource = new MediaSource();
+                videoElement.src = URL.createObjectURL(mediaSource);
+
+                // Setup open event handler
+                mediaSource.addEventListener('sourceopen', onMediaSourceOpen);
+            } else {
+                console.error("MediaSource not available");
+            }
+        }
+
+        function onMediaSourceOpen() {
+            console.log("MediaSource is open");
+        }
+
         var urlBase = "http://www.bok.net/dash/tears_of_steel/cleartext/$RepresentationID$/seg-$Number$.m4f";
         urlBase = urlBase.replace("$RepresentationID$", "video/1");
         urlBase = urlBase.replace("$Number$", "1");
-        
+
         downloadFragment(urlBase, onFragmentDownloaded);
+
+        var videoElement = document.querySelector('video');
+        setupMediaSource(videoElement, onMediaSourceOpen);
 
     })();
 
