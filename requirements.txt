@@ -1,5 +1,5 @@
-Django==1.11.5
+Django==2.0
 django-bootstrap3==9.0.0
 imdbpie==5.2.0
 simplejson==3.11.1
-imdbpy=6.6
+imdbpy==6.6
