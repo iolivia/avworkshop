@@ -1,88 +1,83 @@
-### Part 1: Setting up
 
-## 1.1. Pre-requisites 
-duration: 1 mins (should already be installed)
+## Workshop:00 - Intro (5 mins)
+Form groups of 3 
+Find a team name 
+Introduce yourselves to your teammates
+Name
+What you do
+Random fact about yourself
+Vim or emacs
+Dogs or cats
+Worst/favorite programming language
 
-Python 3.6.2
-Pip
-Code editor of choice
-Git
-Chrome or Firefox 
 
-## 1.2. Teams
-duration: 10 mins
+## Workshop:01 - Setup (10 mins)
+Pre-requisites
+An editor of your choice (Visual Studio Code, Sublime, etc.)
+Python3 and pip3
+Git 
+Chrome or Firefox
 
-## 1.3. Getting the code
-duration: 5 mins
-Clone the repo
-Docs folder
-Follow instructions.md as we go
 
+Grab the code
 git clone https://olivif@bitbucket.org/olivif/avworkshop.git
 
-## 1.4. Running the code
-duration: 5 mins
-Follow setup.md to install python packages
-Run the server
+Run these to install all the python packages needed
+pip3 install -r requirements.txt
+python3 manage.py runserver
 
-python manage.py runserver
+You should see something like this (Ignore any warnings about database migrations)
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
 
-Ignore the warning about migrations
-Navigate to http://127.0.0.1:8000/ 
+Note: You can use a python virtual environment if you don’t want to pollute your global setup. But you don’t have to.
 
+## Workshop:02 – Download video (10 mins)
+Manifest URL - http://www.bok.net/dash/tears_of_steel/cleartext/stream.mpd
 
-### Part 2: Name your app
-duration: 5 mins
+Download video (add the code in player.html script tag)
+BaseURL + representationId + segmentId 
 
-### Part 3: Let's get some movie data
-
-## 3.1. Get top 250 movie data from IMDB
-duration: 15 mins
-
-models.py 
-imdb_api.py
-Fill in get_top_250_movies
-Fetch the data from IMDB using imdbpie
-Iterate through the data and convert to Movie model objects
-
-https://github.com/richardasaurus/imdb-pie
-http://jsonviewer.stack.hu/
-
-## 3.2. Even more movie data
-duration: 10 mins
-
-imdb_api.py
-Fill in 
-get_popular_movies
-get_popular_shows
-
-### Part 4: Player
-duration: 2 mins
-
-Click on one of the movies
-
-## 4.1. Build a simple player with the test data
-duration: 7 mins
-
-player.html
-Add a video element inside <!-- Video player -->
-Use movie.trailer_url for the video source
-
-## 4.2. Build a streaming player
-duration: 5 mins
-
-Use the manifest instead of the video 
-
-http://amssamples.streaming.mediaservices.windows.net/683f7e47-bd83-4427-b0a3-26a6c4547782/BigBuckBunny.ism/manifest(format=mpd-time-csf)
-
-## 4.3. Play the video and observe network traffic
-duration: 7 mins
-
-Open the browser developer tools console – network tab
-Hit play on the video with the manifest
-Look at the traffic
-What do you think is happening?
-What did you notice about the network traffic?
+Notes
+Pick one representation for now 
+Segment ids are sequential, for this piece of content we have 245 segments, but download as many as you want (more than 1 )
+Make sure you get ArrayBuffer responses ( you can do this by printing the response of the http request and see an ArrayBuffer type)
+Open the developer tools network tab and observe
 
 
+## Workshop:03 - Open a MediaSource (10 mins)
+Create a MediaSource instance 
+Link the media source instance to the video element on the page
+Hook onto the MediaSource open event 
+Make sure the MediaSource opens (add a console.log in the event handler)
 
+https://developer.mozilla.org/en-US/docs/Web/API/MediaSource
+
+
+## Workshop:04.1 - Play video (10 mins)
+Feeding the init fragment 
+Add a video source buffer 
+Append the init fragment 
+
+Notes:
+If you’ve done everything correctly, you should see the duration of the video update (since now we have metadata)
+
+https://developer.mozilla.org/en-US/docs/Web/API/SourceBuffer
+
+## Workshop:04.2 - Play video (10 mins)
+Appending video fragments
+Add an event listener for updateend event
+Append the video we downloaded previously in the updateend handler
+Call play programmatically, or press play once on the page
+
+
+## Workshop:05 - Play audio (15 mins)
+Pretty much the same as we did for video
+
+
+## Workshop:06 – Design adaptive quality levels (15 mins)
+Now we’re playing a fixed quality level, but what if our bandwidth is lower than the quality we picked? What if our bandwidth fluctuates while we are watching the video? 
+Design an adaptive quality level detection
+Start with the lowest quality
+Get some measure of how fast we are downloading and increase/decrease the quality level based on that
+No need to write code for this one, but think about how you would do it and what information you need to keep track of.
